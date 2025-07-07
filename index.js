@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import connectDb from './config/db.js';
 import houseRoute from './routes/house.js'
+import photoUploadRoute from './routes/photo-upload.js'
+
 
 const app = express()
 dotenv.config();
@@ -17,6 +19,8 @@ app.use(cookieParser('SECERT'));
 app.use(cors({ origin: true, credentials: true }));
 
 app.use('/api/house', houseRoute);
+app.use('/api/upload-photo', photoUploadRoute);
+
 
 app.listen(process.env.PORT, () => {
     console.log(`Server listening on port http://localhost:${process.env.PORT}`);
