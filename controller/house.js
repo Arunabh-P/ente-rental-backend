@@ -24,7 +24,7 @@ export const getHouses = expressAsyncHandler(async (req, res) => {
         bathrooms, page = 1,
         limit = 10,
         sortBy = "createdAt",
-        order = "desc", available } = req.query
+        available } = req.query
     const query = {};
 
     if (search) {
@@ -52,11 +52,20 @@ export const getHouses = expressAsyncHandler(async (req, res) => {
     // Pagination
     const skip = (Number(page) - 1) * Number(limit);
 
+    // Sort parsing
+    let sortField = sortBy;
+    let sortOrder = 1;
+    if (sortBy.startsWith("-")) {
+        sortField = sortBy.slice(1);
+        sortOrder = -1;
+    }
+
     // Count total for pagination
     const total = await House.countDocuments(query);
 
+
     const houses = await House.find(query)
-        .sort({ [sortBy]: order === "asc" ? 1 : -1 })
+        .sort({ [sortField]: sortOrder })
         .skip(skip)
         .limit(Number(limit));
 
