@@ -13,14 +13,14 @@ const houseSchema = new Schema({
         enum: houseCategory,
         required: true
     },
-    Furnishing: {
+    furnishing: {
         type: String,
         enum: furnishCategory,
         default: 'no'
     },
-    BachelorsAllowed: { type: Boolean, default: true },
-    CarParking: {  type: Boolean, default: true},
-    Bedrooms: { type: Number, required: true },
-    Bathrooms: { type: Number, required: true },
+    bachelorsAllowed: { type: Boolean, default: true },
+    carParking: {  type: Boolean, default: true},
+    bedrooms: { type: Number, required: true },
+    bathrooms: { type: Number, required: true },
 }, { timestamps: true })
 export default mongoose.model('House', houseSchema)

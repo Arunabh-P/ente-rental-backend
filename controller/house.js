@@ -42,9 +42,9 @@ export const getHouses = expressAsyncHandler(async (req, res) => {
     if (propertyType) query.propertyType = propertyType
     if (furnishing) query.furnishing = furnishing
     if (bachelorsAllowed !== undefined) query.bachelorsAllowed = bachelorsAllowed === "true";
-    if (carParking !== undefined) query.CarParking = carParking === "true";
-    if (bedrooms) query.Bedrooms = Number(bedrooms);
-    if (bathrooms) query.Bathrooms = Number(bathrooms);
+    if (carParking !== undefined) query.carParking = carParking === "true";
+    if (bedrooms) query.bedrooms = Number(bedrooms);
+    if (bathrooms) query.bathrooms = Number(bathrooms);
 
     // Pagination
     const skip = (Number(page) - 1) * Number(limit);

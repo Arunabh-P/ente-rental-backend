@@ -56,23 +56,23 @@ export const createHouseValidation = Joi.object({
             'any.only': 'Property type must be one of 1RK, 1BHK, 2BHK, 3BHK, 4BHK, or Studio.',
             'any.required': 'Property type is required.',
         }),
-    Furnishing: Joi.string()
+    furnishing: Joi.string()
         .valid(...furnishCategory)
         .default('no')
         .messages({
             'any.only': 'Furnishing must be one of full, semi, or no.',
         }),
-    BachelorsAllowed: Joi.boolean()
+    bachelorsAllowed: Joi.boolean()
         .default(true)
         .messages({
             'boolean.base': 'BachelorsAllowed must be true or false.',
         }),
-    CarParking: Joi.boolean()
+    carParking: Joi.boolean()
         .default(true)
         .messages({
             'boolean.base': 'CarParking must be true or false.',
         }),
-    Bedrooms: Joi.number()
+    bedrooms: Joi.number()
         .positive()
         .required()
         .messages({
@@ -81,7 +81,7 @@ export const createHouseValidation = Joi.object({
             'any.required': 'Bedrooms count is required.',
         }),
 
-    Bathrooms: Joi.number()
+    bathrooms: Joi.number()
         .positive()
         .required()
         .messages({
