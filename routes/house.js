@@ -4,7 +4,7 @@ import { createHouse, getHouseByID, getHouses, updateHouseById } from '../contro
 const router = express.Router();
 
 router.post('/create', createHouse)
-router.get('/', getHouses); ///api/house?search=delhi&priceMin=5000&priceMax=15000&bedrooms=2&page=1&limit=5
+router.get('/', getHouses); 
 router.get("/:id", getHouseByID)
 router.put('/:id',updateHouseById)
 

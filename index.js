@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import connectDb from './config/db.js';
 import houseRoute from './routes/house.js'
 import photoUploadRoute from './routes/photo-upload.js'
+import renderTestRoute from './routes/test.js'
+
 
 
 const app = express()
@@ -20,6 +22,7 @@ app.use(cors({ origin: true, credentials: true }));
 
 app.use('/api/house', houseRoute);
 app.use('/api/upload-photo', photoUploadRoute);
+app.use('/api/render',renderTestRoute)
 
 
 app.listen(process.env.PORT, () => {
