@@ -42,14 +42,10 @@ export const getHouses = expressAsyncHandler(async (req, res) => {
     if (propertyType) query.propertyType = propertyType
     if (furnishing) query.furnishing = furnishing
     if (carParking === "true") query.carParking = true;
-    else if (carParking === "false") query.carParking = false;
-
     if (bachelorsAllowed === "true") query.bachelorsAllowed = true;
-    else if (bachelorsAllowed === "false") query.bachelorsAllowed = false;
-
     if (available === "true") query.available = true;
-    else if (available === "false") query.available = false;
-    
+
+
     if (bedrooms) query.bedrooms = Number(bedrooms);
     if (bathrooms) query.bathrooms = Number(bathrooms);
 
