@@ -22,6 +22,6 @@ const houseSchema = new Schema({
     carParking: { type: Boolean, default: true },
     bedrooms: { type: Number, required: true },
     bathrooms: { type: Number, required: true },
-    slug: { type: String, unique: true, index: true },
+    slug: { type: String, unique: true, index: true,required: true },
 }, { timestamps: true })
 export default mongoose.model('House', houseSchema)
