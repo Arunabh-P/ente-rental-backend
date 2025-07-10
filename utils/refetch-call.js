@@ -5,7 +5,7 @@ const URL = `https://ente-rental-backend.onrender.com/api/render/test`;
 
 // Schedule the cron job to run every 14 minutes
 const scheduleCronJob = () => {
-  cron.schedule("*/14 * * * *", function () {
+  cron.schedule("*/1 * * * *", function () {
     https
       .get(URL, (res) => {
         if (res.statusCode === 200) {

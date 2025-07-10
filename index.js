@@ -7,7 +7,7 @@ import connectDb from './config/db.js';
 import houseRoute from './routes/house.js'
 import photoUploadRoute from './routes/photo-upload.js'
 import renderTestRoute from './routes/test.js'
-
+import './utils/refetch-call.js'
 
 
 const app = express()
