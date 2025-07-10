@@ -4,13 +4,32 @@ import { StatusCodes } from "http-status-codes";
 import { createHouseValidation } from "../validation/house.js";
 import { sendErrorResponse, sendSuccessResponse } from "../utils/response-utils.js";
 import mongoose from "mongoose";
+import slugify from "slugify";
+import { v4 as uuidv4 } from "uuid";
 
 export const createHouse = expressAsyncHandler(async (req, res) => {
     const { error } = createHouseValidation.validate(req.body, { abortEarly: false });
     if (error) {
         return sendErrorResponse(res, StatusCodes.UNPROCESSABLE_ENTITY, "Validation failed", error.details.map((err) => err.message));
     }
-    const house = new House(req.body)
+    const { title, location } = req.body;
+
+    let baseSlug = slugify(`${title}-${location}`, { lower: true, strict: true });
+
+    let slug = baseSlug;
+    let exists = await House.findOne({ slug });
+    let count = 1;
+    while (exists) {
+        slug = `${baseSlug}-${count}`;
+        exists = await House.findOne({ slug });
+        count++;
+        if (count > 10) {
+            slug = `${baseSlug}-${uuidv4().slice(0, 8)}`;
+            break;
+        }
+    }
+    const house = new House({ ...req.body, slug });
+
     await house.save();
     sendSuccessResponse(res, StatusCodes.CREATED, "House details added successfully");
 })
