@@ -113,6 +113,18 @@ export const getHouseByID = expressAsyncHandler(async (req, res) => {
     sendSuccessResponse(res, StatusCodes.OK, "House details fetched successfully", house);
 })
 
+export const getHouseBySlug = expressAsyncHandler(async (req, res) => {
+    const { slug } = req.params;
+
+    const house = await House.findOne({ slug });
+
+    if (!house) {
+        return sendErrorResponse(res, StatusCodes.NOT_FOUND, "House not found");
+    }
+
+    sendSuccessResponse(res, StatusCodes.OK, "House details fetched successfully", house);
+});
+
 export const updateHouseById = expressAsyncHandler(async (req, res) => {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
