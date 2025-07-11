@@ -7,9 +7,9 @@ import {
 } from "../constants/house.js";
 
 export const createHouseValidation = Joi.object({
-  title: Joi.string().min(3).max(80).required().messages({
+  title: Joi.string().min(3).required().messages({
     "string.min": "Title must be at least 3 characters long.",
-    "string.max": "Title must have max 30 characters.",
+    "string.max": "Title must have max 80 characters.",
     "any.required": "Title is required.",
     "string.empty": "Title is required.",
     "string.base": "Title must be a string.",
