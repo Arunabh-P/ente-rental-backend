@@ -1,2 +1,3 @@
-export const houseCategory = ['1RK', '1BHK', '2BHK', '3BHK', '4BHK', 'Studio']
-export const furnishCategory = ['full', 'semi', 'no']
+export const houseCategory = ['house', 'villa', 'flats-apartments', 'independent-builder-floors']
+export const furnishCategory = ['furnished', 'semi-furnished', 'not-furnished']
+export const rooms = ['1', '2', '3', '4+']

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { furnishCategory, houseCategory } from "../constants/house.js";
+import { furnishCategory, houseCategory, rooms } from "../constants/house.js";
 
 export const createHouseValidation = Joi.object({
     title: Joi.string().min(3).max(50).required().messages({
@@ -53,14 +53,13 @@ export const createHouseValidation = Joi.object({
         .valid(...houseCategory)
         .required()
         .messages({
-            'any.only': 'Property type must be one of 1RK, 1BHK, 2BHK, 3BHK, 4BHK, or Studio.',
             'any.required': 'Property type is required.',
         }),
     furnishing: Joi.string()
         .valid(...furnishCategory)
         .default('no')
         .messages({
-            'any.only': 'Furnishing must be one of full, semi, or no.',
+            'any.only': 'Furnishing is required.',
         }),
     bachelorsAllowed: Joi.boolean()
         .default(true)
@@ -72,21 +71,17 @@ export const createHouseValidation = Joi.object({
         .messages({
             'boolean.base': 'CarParking must be true or false.',
         }),
-    bedrooms: Joi.number()
-        .positive()
+    bedrooms: Joi.string()
+    .valid(...rooms)
         .required()
         .messages({
-            'number.base': 'Bedrooms must be a number.',
-            'number.positive': 'Bedrooms must be a positive number.',
-            'any.required': 'Bedrooms count is required.',
+            'any.required': 'Bedroom count is required.',
         }),
 
-    bathrooms: Joi.number()
-        .positive()
+    bathrooms: Joi.string()
+       .valid(...rooms)
         .required()
         .messages({
-            'number.base': 'Bathrooms must be a number.',
-            'number.positive': 'Bathrooms must be a positive number.',
             'any.required': 'Bathrooms count is required.',
         }),
 })
