@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { furnishCategory, houseCategory } from "../constants/house.js";
+import { furnishCategory, houseCategory, rooms } from "../constants/house.js";
 
 const houseSchema = new Schema({
     title: { type: String, required: true },
