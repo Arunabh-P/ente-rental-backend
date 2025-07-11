@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { furnishCategory, houseCategory, rooms } from "../constants/house.js";
+import { facingDirection, furnishCategory, houseCategory, rooms } from "../constants/house.js";
 
 const houseSchema = new Schema({
     title: { type: String, required: true },
@@ -22,6 +22,36 @@ const houseSchema = new Schema({
     carParking: { type: Boolean, default: true },
     bedrooms: { type: String, required: true, enum: rooms },
     bathrooms: { type: String, required: true, enum: rooms },
+    carParkingCount: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+    builtUpAreaSqFt: {
+        type: Number,
+        required: true,
+        min: 100, 
+    },
+    carpetAreaSqFt: {
+        type: Number,
+        min: 50, 
+    },
+    totalFloors: {
+        type: Number,
+        min: 1,
+    },
+    floorNumber: {
+        type: Number,
+        min: 0,
+    },
+    ageOfProperty: {
+        type: Number,
+        min: 0,
+    },
+    facing: {
+        type: String,
+        enum: facingDirection,
+    },
     slug: { type: String, unique: true, index: true, required: true },
 }, { timestamps: true })
 export default mongoose.model('House', houseSchema)

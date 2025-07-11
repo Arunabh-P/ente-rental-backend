@@ -1,87 +1,125 @@
 import Joi from "joi";
-import { furnishCategory, houseCategory, rooms } from "../constants/house.js";
+import {
+  facingDirection,
+  furnishCategory,
+  houseCategory,
+  rooms,
+} from "../constants/house.js";
 
 export const createHouseValidation = Joi.object({
-    title: Joi.string().min(3).max(100).required().messages({
-        'string.min': 'Title must be at least 3 characters long.',
-        'string.max': 'Title must have max 30 characters.',
-        'any.required': 'Title is required.',
-        'string.empty': 'Title is required.',
-        'string.base': 'Title must be a string.',
+  title: Joi.string().min(3).max(30).required().messages({
+    "string.min": "Title must be at least 3 characters long.",
+    "string.max": "Title must have max 30 characters.",
+    "any.required": "Title is required.",
+    "string.empty": "Title is required.",
+    "string.base": "Title must be a string.",
+  }),
+  description: Joi.string().min(10).max(1000).required().messages({
+    "string.base": "Description must be a string.",
+    "string.empty": "Description is required.",
+    "string.min": "Description must be at least 10 characters long.",
+    "string.max": "Title must have max 250 characters.",
+    "any.required": "Description is required.",
+  }),
+  location: Joi.string().required().min(2).max(50).messages({
+    "string.base": "Location must be a string.",
+    "string.empty": "Location is required.",
+    "any.required": "Location is required.",
+    "string.min": "Description must be at least 2 characters long.",
+    "string.max": "Title must have max 50 characters.",
+  }),
+  price: Joi.number().positive().required().messages({
+    "number.base": "Price must be a number.",
+    "number.positive": "Price must be a positive number.",
+    "any.required": "Price is required.",
+  }),
+  available: Joi.boolean().default(true).messages({
+    "boolean.base": "Available must be true or false.",
+  }),
+  images: Joi.array()
+    .items(
+      Joi.string().uri().messages({
+        "string.uri": "Each image must be a valid URL.",
+      })
+    )
+    .messages({
+      "array.base": "Images must be an array of URLs.",
     }),
-    description: Joi.string()
-        .min(10).max(1000)
-        .required()
-        .messages({
-            'string.base': 'Description must be a string.',
-            'string.empty': 'Description is required.',
-            'string.min': 'Description must be at least 10 characters long.',
-            'string.max': 'Title must have max 250 characters.',
-            'any.required': 'Description is required.',
-        }),
-    location: Joi.string()
-        .required()
-        .min(2).max(50)
-        .messages({
-            'string.base': 'Location must be a string.',
-            'string.empty': 'Location is required.',
-            'any.required': 'Location is required.',
-            'string.min': 'Description must be at least 2 characters long.',
-            'string.max': 'Title must have max 50 characters.',
-        }),
-    price: Joi.number()
-        .positive()
-        .required()
-        .messages({
-            'number.base': 'Price must be a number.',
-            'number.positive': 'Price must be a positive number.',
-            'any.required': 'Price is required.',
-        }),
-    available: Joi.boolean()
-        .default(true)
-        .messages({
-            'boolean.base': 'Available must be true or false.',
-        }),
-    images: Joi.array()
-        .items(Joi.string().uri().messages({
-            'string.uri': 'Each image must be a valid URL.',
-        }))
-        .messages({
-            'array.base': 'Images must be an array of URLs.',
-        }),
-    propertyType: Joi.string()
-        .valid(...houseCategory)
-        .required()
-        .messages({
-            'any.required': 'Property type is required.',
-        }),
-    furnishing: Joi.string()
-        .valid(...furnishCategory)
-        .default('no')
-        .messages({
-            'any.only': 'Furnishing is required.',
-        }),
-    bachelorsAllowed: Joi.boolean()
-        .default(true)
-        .messages({
-            'boolean.base': 'BachelorsAllowed must be true or false.',
-        }),
-    carParking: Joi.boolean()
-        .default(true)
-        .messages({
-            'boolean.base': 'CarParking must be true or false.',
-        }),
-    bedrooms: Joi.string()
-    .valid(...rooms)
-        .required()
-        .messages({
-            'any.required': 'Bedroom count is required.',
-        }),
+  propertyType: Joi.string()
+    .valid(...houseCategory)
+    .required()
+    .messages({
+      "any.required": "Property type is required.",
+    }),
+  furnishing: Joi.string()
+    .valid(...furnishCategory)
+    .default("no")
+    .messages({
+      "any.only": "Furnishing is required.",
+    }),
+  bachelorsAllowed: Joi.boolean().default(true).messages({
+    "boolean.base": "BachelorsAllowed must be true or false.",
+  }),
+  carParking: Joi.boolean().default(true).messages({
+    "boolean.base": "CarParking must be true or false.",
+  }),
+  carParkingCount: Joi.number()
+    .min(0)
+    .when("carParking", {
+      is: true,
+      then: Joi.required(),
+      otherwise: Joi.optional().allow(null),
+    })
+    .messages({
+      "number.base": "Car parking count must be a number.",
+      "number.min": "Car parking count cannot be negative.",
+      "any.required":
+        "Car parking count is required when car parking is enabled.",
+    }),
 
-    bathrooms: Joi.string()
-       .valid(...rooms)
-        .required()
-        .messages({
-            'any.required': 'Bathrooms count is required.',
-        }),
-})
+  builtUpAreaSqFt: Joi.number().positive().required().messages({
+    "number.base": "Built-up area must be a number.",
+    "number.positive": "Built-up area must be a positive number.",
+    "any.required": "Built-up area is required.",
+  }),
+
+  carpetAreaSqFt: Joi.number().positive().optional().messages({
+    "number.base": "Carpet area must be a number.",
+    "number.positive": "Carpet area must be a positive number.",
+  }),
+
+  totalFloors: Joi.number().min(1).optional().messages({
+    "number.base": "Total floors must be a number.",
+    "number.min": "There must be at least 1 floor.",
+  }),
+
+  floorNumber: Joi.number().min(0).optional().messages({
+    "number.base": "Floor number must be a number.",
+    "number.min": "Floor number must be zero or more.",
+  }),
+
+  ageOfProperty: Joi.number().min(0).optional().messages({
+     "number.base": "Age must be a number.",
+    "number.min": "Age must be zero or more.",
+  }),
+
+  facing: Joi.string()
+    .valid(...facingDirection)
+    .optional()
+    .messages({
+      "any.only": "Facing must be a valid direction.",
+    }),
+  bedrooms: Joi.string()
+    .valid(...rooms)
+    .required()
+    .messages({
+      "any.required": "Bedroom count is required.",
+    }),
+
+  bathrooms: Joi.string()
+    .valid(...rooms)
+    .required()
+    .messages({
+      "any.required": "Bathrooms count is required.",
+    }),
+});
