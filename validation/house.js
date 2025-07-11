@@ -2,7 +2,7 @@ import Joi from "joi";
 import { furnishCategory, houseCategory, rooms } from "../constants/house.js";
 
 export const createHouseValidation = Joi.object({
-    title: Joi.string().min(3).max(50).required().messages({
+    title: Joi.string().min(3).max(100).required().messages({
         'string.min': 'Title must be at least 3 characters long.',
         'string.max': 'Title must have max 30 characters.',
         'any.required': 'Title is required.',
@@ -10,7 +10,7 @@ export const createHouseValidation = Joi.object({
         'string.base': 'Title must be a string.',
     }),
     description: Joi.string()
-        .min(10).max(250)
+        .min(10).max(1000)
         .required()
         .messages({
             'string.base': 'Description must be a string.',
