@@ -45,18 +45,21 @@ export const createHouseValidation = Joi.object({
     .messages({
       "array.base": "Images must be an array of URLs.",
     }),
-  propertyType: Joi.string()
-    .valid(...houseCategory)
-    .required()
-    .messages({
-      "any.required": "Property type is required.",
-    }),
-  furnishing: Joi.string()
-    .valid(...furnishCategory)
-    .default("no")
-    .messages({
-      "any.only": "Furnishing is required.",
-    }),
+  propertyType: yup
+  .string()
+  .oneOf(houseCategories, 'Invalid property type')
+  .required('Property type is required'),
+
+furnishing: yup
+  .string()
+  .oneOf(furnishCategories, 'Invalid furnishing type')
+  .required('Furnishing is required'),
+
+facing: yup
+  .string()
+  .oneOf(facingDirections, 'Invalid facing direction')
+  .nullable(),
+
   bachelorsAllowed: Joi.boolean().default(true).messages({
     "boolean.base": "BachelorsAllowed must be true or false.",
   }),
@@ -103,12 +106,7 @@ export const createHouseValidation = Joi.object({
     "number.min": "Age must be zero or more.",
   }),
 
-  facing: Joi.string()
-    .valid(...facingDirection)
-    .optional()
-    .messages({
-      "any.only": "Facing must be a valid direction.",
-    }),
+ 
   bedrooms: Joi.string()
     .valid(...rooms)
     .required()

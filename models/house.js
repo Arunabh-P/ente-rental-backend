@@ -24,7 +24,7 @@ const houseSchema = new Schema({
     bathrooms: { type: String, required: true, enum: rooms },
     carParkingCount: {
         type: Number,
-        default: 0,
+        default: null,
         min: 0,
     },
     builtUpAreaSqFt: {
@@ -35,21 +35,26 @@ const houseSchema = new Schema({
     carpetAreaSqFt: {
         type: Number,
         min: 50, 
+        default: null,
     },
     totalFloors: {
         type: Number,
+        default: null,
         min: 1,
     },
     floorNumber: {
         type: Number,
+        default: null,
         min: 0,
     },
     ageOfProperty: {
         type: Number,
+        default: null,
         min: 0,
     },
     facing: {
         type: String,
+        default: null,
         enum: facingDirection,
     },
     slug: { type: String, unique: true, index: true, required: true },
