@@ -184,6 +184,6 @@ export const updateHouseById = expressAsyncHandler(async (req, res) => {
     res,
     StatusCodes.OK,
     "House updated successfully",
-    updatedHouse
+    updateHouse
   );
 });
