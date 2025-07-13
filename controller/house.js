@@ -187,3 +187,15 @@ export const updateHouseById = expressAsyncHandler(async (req, res) => {
     updateHouse
   );
 });
+
+export const deleteHouseById = expressAsyncHandler(async(req,res)=>{
+  const {id} =req.params;
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return sendErrorResponse(res,StatusCodes.BAD_REQUEST,"Invalid house id")
+  }
+  const deleteHouse = await House.findByIdAndDelete(id)
+  if(!deleteHouse){
+    return sendErrorResponse(res,StatusCodes.NOT_FOUND,"House not found")
+  }
+  sendSuccessResponse(res,StatusCodes.OK,"House deleted successfully",deleteHouse)
+})
