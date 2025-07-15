@@ -6,7 +6,7 @@ import {
 } from "../utils/response-utils.js";
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
-
+import jwt from "jsonwebtoken";
 export const createAdmin = expressAsyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) {
@@ -51,4 +51,123 @@ export const createAdmin = expressAsyncHandler(async (req, res) => {
     email: newAdmin.email,
     role: newAdmin.role,
   });
+});
+
+const generateAdminAccessToken = (admin) => {
+  return jwt.sign(
+    {
+      id: admin._id,
+      email: admin.email,
+      role: admin.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" }
+  );
+};
+const generateAdminRefreshToken = (admin) => {
+  return jwt.sign(
+    {
+      id: admin._id,
+      email: admin.email,
+      role: admin.role,
+    },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: "7d" }
+  );
+};
+
+export const loginAdmin = expressAsyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      "Email and password are required"
+    );
+  }
+  const normalizedEmail = email.toLowerCase();
+  const admin = await Admin.findOne({ email: normalizedEmail });
+  if (!admin) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      "Invalid credentials"
+    );
+  }
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      "Invalid credentials"
+    );
+  }
+  if (!["admin", "superAdmin"].includes(admin.role)) {
+    return sendErrorResponse(res, StatusCodes.FORBIDDEN, "Access denied");
+  }
+  const accessToken = generateAdminAccessToken(admin);
+  const refreshToken = generateAdminRefreshToken(admin);
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 15 * 60 * 1000,
+  });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+  sendSuccessResponse(res, StatusCodes.OK, "Login successful", {
+    user: {
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      role: admin.role,
+    },
+  });
+});
+
+export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      "Refresh token is required"
+    );
+  }
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const admin = await Admin.findById(decoded.id);
+    if (!admin) {
+      return sendErrorResponse(
+        res,
+        StatusCodes.UNAUTHORIZED,
+        "Invalid refresh token"
+      );
+    }
+    const newAccessToken = generateAdminAccessToken(admin);
+    const newRefreshToken = generateAdminRefreshToken(admin);
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    sendSuccessResponse(res, StatusCodes.OK, "Token refreshed successfully");
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      "Invalid or expired refresh token"
+    );
+  }
 });
