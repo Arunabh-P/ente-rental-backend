@@ -109,13 +109,13 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
   const refreshToken = generateAdminRefreshToken(admin);
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
     maxAge: 15 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -130,7 +130,7 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
 });
 
 export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const  refreshToken  = req.cookies.refreshToken;
   if (!refreshToken) {
     return sendErrorResponse(
       res,
@@ -152,13 +152,13 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
     const newRefreshToken = generateAdminRefreshToken(admin);
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
       maxAge: 15 * 60 * 1000,
     });
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
