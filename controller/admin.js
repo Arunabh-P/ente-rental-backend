@@ -179,7 +179,9 @@ export const authDetails = expressAsyncHandler(async(req,res)=>{
   }
   try {
     const decoded = jwt.verify(token,process.env.JWT_SECRET)
-    const admin = await Admin.findById(decoded.id).select('-password')
+    const admin = await Admin.findById(decoded.id).select(
+      "id name email role"
+    ) 
     if(!admin){
       return sendErrorResponse(res,StatusCodes.UNAUTHORIZED,'User not found');
     }
