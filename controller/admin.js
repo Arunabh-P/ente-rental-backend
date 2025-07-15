@@ -171,3 +171,21 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
     );
   }
 });
+
+export const authDetails = expressAsyncHandler(async(req,res)=>{
+  const token = req.cookies.accessToken;
+  if(!token){
+    return sendErrorResponse(res,StatusCodes.UNAUTHORIZED,'No token provided')
+  }
+  try {
+    const decoded = jwt.verify(token,process.env.JWT_SECRET)
+    const admin = await Admin.findById(decoded.id).select('-password')
+    if(!admin){
+      return sendErrorResponse(res,StatusCodes.UNAUTHORIZED,'User not found');
+    }
+    req.user = admin;
+   sendSuccessResponse(res, StatusCodes.OK, "Self data fetched successfully", req.user);
+  } catch (error) {
+    return sendErrorResponse(res, StatusCodes.UNAUTHORIZED, 'Invalid or expired token');
+  }
+})
