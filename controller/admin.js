@@ -214,3 +214,19 @@ export const authDetails = expressAsyncHandler(async (req, res) => {
     );
   }
 });
+
+export const logoutAdmin = expressAsyncHandler(async(req,res)=>{
+  res.clearCookie('accessToken',{
+    httpOnly:true,
+    secure:true,
+    sameSite:'none',
+    path:'/'
+  })
+  res.clearCookie('refreshToken',{
+    httpOnly:true,
+    secure:true,
+    sameSite:'none',
+    path:'/'
+  })
+  sendSuccessResponse(res,StatusCodes.OK,'You are logout from Ente Rentals')
+})
