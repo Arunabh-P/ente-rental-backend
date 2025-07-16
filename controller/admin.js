@@ -112,7 +112,7 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: 5 * 1000,
+    maxAge: 15 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
