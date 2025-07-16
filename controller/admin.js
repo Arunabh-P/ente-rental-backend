@@ -112,7 +112,7 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: 15 * 60 * 1000,
+    maxAge: 5 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
@@ -176,12 +176,21 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
 
 export const authDetails = expressAsyncHandler(async (req, res) => {
   const token = req.cookies.accessToken;
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!token && !refreshToken) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      "No token provided",null,
+      "NO_TOKEN"
+    );
+  }
   if (!token) {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "No token provided",
-      "NO_TOKEN"
+      "No token provided"
     );
   }
   try {
