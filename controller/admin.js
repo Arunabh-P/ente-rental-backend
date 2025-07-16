@@ -180,7 +180,8 @@ export const authDetails = expressAsyncHandler(async (req, res) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "No token provided"
+      "No token provided",
+      "NO_TOKEN"
     );
   }
   try {
