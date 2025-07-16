@@ -111,12 +111,14 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    path: "/",
     maxAge: 15 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   sendSuccessResponse(res, StatusCodes.OK, "Login successful", {
@@ -152,12 +154,14 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
       maxAge: 15 * 60 * 1000,
     });
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     sendSuccessResponse(res, StatusCodes.OK, "Token refreshed successfully");
