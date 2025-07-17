@@ -6,6 +6,8 @@ import {
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/user.js";
+import jwt from "jsonwebtoken";
+
 const generateUserAccessToken = (user) => {
   return jwt.sign(
     {
