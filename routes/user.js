@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserProfile, loginUser, registerUser, updateUser, veryfyNextAuthToken } from "../controller/user";
+import { getUserProfile, loginUser, registerUser, updateUser, veryfyNextAuthToken } from "../controller/user.js";
 export const router = express.Router();
 
 router.post("/register",  registerUser);
