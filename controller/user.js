@@ -85,7 +85,7 @@ export const veryfyNextAuthToken = expressAsyncHandler(
     }
     const token = authHeader.substring(7);
     try {
-      const decoded = jwt.verify(token.process.env.NEXTAUTH_SECRET);
+      const decoded = jwt.verify(token,process.env.NEXTAUTH_SECRET);
       const userId = decoded.user?.id || decoded.sub;
       if (!userId) {
         return sendErrorResponse(
