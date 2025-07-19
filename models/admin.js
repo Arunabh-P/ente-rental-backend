@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const adminSchema = new Schema(
   {
@@ -7,10 +7,10 @@ const adminSchema = new Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["admin", "superAdmin"],
-      default: "admin",
+      enum: ['admin', 'superAdmin'],
+      default: 'admin',
     },
   },
   { timestamps: true }
 );
-export default mongoose.model("Admin", adminSchema);
+export default mongoose.model('Admin', adminSchema);

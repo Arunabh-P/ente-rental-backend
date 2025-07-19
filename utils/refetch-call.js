@@ -1,25 +1,25 @@
-import cron from "node-cron";
-import https from "https";
+import cron from 'node-cron';
+import https from 'https';
 
 const URL = `https://ente-rental-backend.onrender.com/api/render/test`;
 
 // Schedule the cron job to run every 14 minutes
 const scheduleCronJob = () => {
-  cron.schedule("*/14 * * * *", function () {
+  cron.schedule('*/14 * * * *', function () {
     https
       .get(URL, (res) => {
         if (res.statusCode === 200) {
-          console.log("GET request sent successfully");
+          console.log('GET request sent successfully');
         } else {
-          console.log("GET request failed with status code:", res.statusCode);
+          console.log('GET request failed with status code:', res.statusCode);
         }
       })
-      .on("error", (e) => {
-        console.error("Error while sending request:", e);
+      .on('error', (e) => {
+        console.error('Error while sending request:', e);
       });
   });
 
-  console.log("Cron job scheduled to run every 14 minutes.");
+  console.log('Cron job scheduled to run every 14 minutes.');
 };
 
 // Automatically start the job when this file is imported

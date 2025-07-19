@@ -4,16 +4,15 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import connectDb from './config/db.js';
-import houseRoute from './routes/house.js'
-import photoUploadRoute from './routes/photo-upload.js'
-import renderTestRoute from './routes/test.js'
-import userRoute from './routes/user.js'
-import adminRoute from './routes/admin.js'
+import houseRoute from './routes/house.js';
+import photoUploadRoute from './routes/photo-upload.js';
+import renderTestRoute from './routes/test.js';
+import userRoute from './routes/user.js';
+import adminRoute from './routes/admin.js';
 
-import './utils/refetch-call.js'
+import './utils/refetch-call.js';
 
-
-const app = express()
+const app = express();
 dotenv.config();
 connectDb();
 
@@ -25,12 +24,10 @@ app.use(cors({ origin: true, credentials: true }));
 
 app.use('/api/house', houseRoute);
 app.use('/api/upload-photo', photoUploadRoute);
-app.use('/api/render',renderTestRoute)
-app.use('/api/admin',adminRoute)
-app.use('/api/user',userRoute)
-
-
+app.use('/api/render', renderTestRoute);
+app.use('/api/admin', adminRoute);
+app.use('/api/user', userRoute);
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server listening on port http://localhost:${process.env.PORT}`);
-})
+  console.log(`Server listening on port http://localhost:${process.env.PORT}`);
+});

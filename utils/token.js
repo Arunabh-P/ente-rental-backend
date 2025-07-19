@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export const generateAccessToken = (data, secret, expiresIn) => {
   if (!data || !secret || !expiresIn) return null;

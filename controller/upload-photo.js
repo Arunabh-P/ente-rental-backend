@@ -1,5 +1,8 @@
 import expressAsyncHandler from 'express-async-handler';
-import { sendErrorResponse, sendSuccessResponse } from '../utils/response-utils.js';
+import {
+  sendErrorResponse,
+  sendSuccessResponse,
+} from '../utils/response-utils.js';
 import fs from 'fs';
 import path from 'path';
 import { v2 as cloudinary } from 'cloudinary';
@@ -26,7 +29,7 @@ export const uploadPhoto = expressAsyncHandler(async (req, res) => {
 
     // Step 1: Upload non-watermarked image
     await cloudinary.uploader.upload(filePath, {
-      folder:`${folder}/og-image`,
+      folder: `${folder}/og-image`,
       public_id: `${fileNameWithoutExt}-original`,
       allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
       transformation: [
@@ -47,7 +50,7 @@ export const uploadPhoto = expressAsyncHandler(async (req, res) => {
     // Step 2: Upload watermarked version
     const watermarkedUpload = await cloudinary.uploader.upload(filePath, {
       folder,
-      public_id: `${fileNameWithoutExt}-ente-rental-kochi`, 
+      public_id: `${fileNameWithoutExt}-ente-rental-kochi`,
       allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
       transformation: [
         {
@@ -76,13 +79,22 @@ export const uploadPhoto = expressAsyncHandler(async (req, res) => {
 
     fs.unlinkSync(filePath);
 
-    return sendSuccessResponse(res, StatusCodes.OK, 'Image uploaded successfully', {
-      url: watermarkedUpload.secure_url,
-      public_id: watermarkedUpload.public_id,
-    });
+    return sendSuccessResponse(
+      res,
+      StatusCodes.OK,
+      'Image uploaded successfully',
+      {
+        url: watermarkedUpload.secure_url,
+        public_id: watermarkedUpload.public_id,
+      }
+    );
   } catch (error) {
     console.error('Cloudinary upload error:', error);
     if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    return sendErrorResponse(res, StatusCodes.INTERNAL_SERVER_ERROR, 'Image upload failed');
+    return sendErrorResponse(
+      res,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Image upload failed'
+    );
   }
 });

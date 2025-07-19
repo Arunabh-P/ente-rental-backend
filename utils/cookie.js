@@ -3,8 +3,8 @@ export const setCookie = (res, title, token, maxAge = 3600000) => {
   return res.cookie(title, token, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
-    path: "/",
+    sameSite: 'none',
+    path: '/',
     maxAge,
   });
 };
@@ -14,7 +14,7 @@ export const clearCookie = (res, title) => {
   res.clearCookie(title, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
-    path: "/",
+    sameSite: 'none',
+    path: '/',
   });
 };

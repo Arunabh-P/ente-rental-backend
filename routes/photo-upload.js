@@ -6,6 +6,11 @@ import { uploadPhoto } from '../controller/upload-photo.js';
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-router.post('/house',setUploadFolder('ente-rental/house-images'), upload.single('file'), uploadPhoto);
+router.post(
+  '/house',
+  setUploadFolder('ente-rental/house-images'),
+  upload.single('file'),
+  uploadPhoto
+);
 
 export default router;
