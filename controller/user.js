@@ -83,7 +83,7 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
   });
 });
 
-export const refreshUserToken = expressAsyncHandler(async (req, res, next) => {
+export const refreshUserToken = expressAsyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return sendErrorResponse(
@@ -119,7 +119,7 @@ export const refreshUserToken = expressAsyncHandler(async (req, res, next) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "Invalid or expired token"
+      error?.message || "Invalid or expired token"
     );
   }
 });
@@ -155,7 +155,7 @@ export const authenticateUser = expressAsyncHandler(async (req, res, next) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "Invalid or expired token"
+      error?.message ||"Invalid or expired token"
     );
   }
 });

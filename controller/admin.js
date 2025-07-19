@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../utils/token.js";
-import { clearCookie } from "../utils/cookie.js";
+import { clearCookie, setCookie } from "../utils/cookie.js";
 export const createAdmin = expressAsyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) {
@@ -149,7 +149,7 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "Invalid or expired refresh token"
+     error?.message || "Invalid or expired refresh token"
     );
   }
 });
@@ -191,7 +191,7 @@ export const authDetails = expressAsyncHandler(async (req, res) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "Invalid or expired token"
+      error?.message || "Invalid or expired token"
     );
   }
 });

@@ -17,7 +17,7 @@ export const protect = async (req,res,next)=>{
     req.admin = admin; 
     next();
   } catch (err) {
-    return sendErrorResponse(res, StatusCodes.UNAUTHORIZED, "Invalid token");
+    return sendErrorResponse(res, StatusCodes.UNAUTHORIZED, err?.message || "Invalid token");
   }
 
 }
