@@ -7,6 +7,8 @@ import {
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
+import { generateAccessToken } from "../utils/token.js";
+import { clearCookie } from "../utils/cookie.js";
 export const createAdmin = expressAsyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) {
@@ -33,7 +35,7 @@ export const createAdmin = expressAsyncHandler(async (req, res) => {
     );
   }
 
-  const existingAdmin = await Admin.findOne({ normalizedEmail });
+  const existingAdmin = await Admin.findOne({ email: normalizedEmail });
   if (existingAdmin) {
     return sendErrorResponse(res, StatusCodes.CONFLICT, "Admin already exists");
   }
@@ -52,29 +54,6 @@ export const createAdmin = expressAsyncHandler(async (req, res) => {
     role: newAdmin.role,
   });
 });
-
-const generateAdminAccessToken = (admin) => {
-  return jwt.sign(
-    {
-      id: admin._id,
-      email: admin.email,
-      role: admin.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "15m" }
-  );
-};
-const generateAdminRefreshToken = (admin) => {
-  return jwt.sign(
-    {
-      id: admin._id,
-      email: admin.email,
-      role: admin.role,
-    },
-    process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "7d" }
-  );
-};
 
 export const loginAdmin = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -105,8 +84,13 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
   if (!["admin", "superAdmin"].includes(admin.role)) {
     return sendErrorResponse(res, StatusCodes.FORBIDDEN, "Access denied");
   }
-  const accessToken = generateAdminAccessToken(admin);
-  const refreshToken = generateAdminRefreshToken(admin);
+  const accessToken = generateAccessToken(admin, process.env.JWT_SECRET, "15m");
+  const refreshToken = generateAccessToken(
+    admin,
+    process.env.JWT_REFRESH_SECRET,
+    "7d"
+  );
+
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: true,
@@ -122,10 +106,10 @@ export const loginAdmin = expressAsyncHandler(async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   sendSuccessResponse(res, StatusCodes.OK, "Login successful", {
-      id: admin._id,
-      name: admin.name,
-      email: admin.email,
-      role: admin.role,
+    id: admin._id,
+    name: admin.name,
+    email: admin.email,
+    role: admin.role,
   });
 });
 
@@ -148,22 +132,18 @@ export const refreshAdminToken = expressAsyncHandler(async (req, res) => {
         "Invalid refresh token"
       );
     }
-    const newAccessToken = generateAdminAccessToken(admin);
-    const newRefreshToken = generateAdminRefreshToken(admin);
-    res.cookie("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: 15 * 60 * 1000,
-    });
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    const newAccessToken = generateAccessToken(
+      admin,
+      process.env.JWT_SECRET,
+      "15m"
+    );
+    const newRefreshToken = generateAccessToken(
+      admin,
+      process.env.JWT_REFRESH_SECRET,
+      "7d"
+    );
+    setCookie(res, "accessToken", newAccessToken, 15 * 60 * 1000);
+    setCookie(res, "refreshToken", newRefreshToken, 7 * 24 * 60 * 60 * 1000);
     sendSuccessResponse(res, StatusCodes.OK, "Token refreshed successfully");
   } catch (error) {
     return sendErrorResponse(
@@ -182,7 +162,8 @@ export const authDetails = expressAsyncHandler(async (req, res) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      "No token provided",null,
+      "No token provided",
+      null,
       "NO_TOKEN"
     );
   }
@@ -215,18 +196,12 @@ export const authDetails = expressAsyncHandler(async (req, res) => {
   }
 });
 
-export const logoutAdmin = expressAsyncHandler(async(req,res)=>{
-  res.clearCookie('accessToken',{
-    httpOnly:true,
-    secure:true,
-    sameSite:'none',
-    path:'/'
-  })
-  res.clearCookie('refreshToken',{
-    httpOnly:true,
-    secure:true,
-    sameSite:'none',
-    path:'/'
-  })
-  sendSuccessResponse(res,StatusCodes.OK,'You are logout from Ente Rentals')
-})
+export const logoutAdmin = expressAsyncHandler(async (req, res) => {
+  clearCookie(res, "accessToken");
+  clearCookie(res, "refreshToken");
+  sendSuccessResponse(
+    res,
+    StatusCodes.OK,
+    "You have been logged out of Ente Rentals"
+  );
+});

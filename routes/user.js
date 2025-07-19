@@ -1,11 +1,12 @@
 import express from "express";
-import { getUserProfile, loginUser, registerUser, updateUser, veryfyNextAuthToken } from "../controller/user.js";
+import {  authenticateUser, getUserProfile, loginUser, logoutUser, refreshUserToken, registerUser } from "../controller/user.js";
 export const router = express.Router();
 
 router.post("/register",  registerUser);
 router.post("/login", loginUser);
-router.get("/profile", veryfyNextAuthToken,getUserProfile);
-router.put("/profile", veryfyNextAuthToken,updateUser);
+router.post("/refresh-token", refreshUserToken);
+router.get("/profile",authenticateUser,getUserProfile);
+router.post("/logout", logoutUser);
 
 
 export default router;
