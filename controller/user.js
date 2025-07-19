@@ -119,7 +119,7 @@ export const refreshUserToken = expressAsyncHandler(async (req, res) => {
     return sendErrorResponse(
       res,
       StatusCodes.UNAUTHORIZED,
-      error?.message || "Invalid or expired token"
+      error?.message || 'Invalid or expired token'
     );
   }
 });
