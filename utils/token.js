@@ -8,3 +8,4 @@ export const generateAccessToken = (data, secret, expiresIn) => {
     { expiresIn: expiresIn }
   );
 };
+//test
